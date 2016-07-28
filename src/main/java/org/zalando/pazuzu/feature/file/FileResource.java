@@ -46,11 +46,11 @@ public class FileResource {
      * tools like curl. Could be more consistent to pass all fields as multipart though.
      */
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FileDto> createFile(@PathVariable String featureName, @RequestParam(required = false, name = "name") String fileName,
+    public ResponseEntity<FileDto> createFile(@PathVariable String featureName, @RequestParam(name = "name") String fileName,
                                               InputStream inputStream, UriComponentsBuilder uriBuilder) {
         final FileDto fd = FileDto.fromFile(fileService.create(featureName, fileName, inputStream));
         return ResponseEntity
-                .created(uriBuilder.path("/api/files/{fileId}").buildAndExpand(fd.getId()).toUri())
+                .created(uriBuilder.path("/api/features/{featureName}/files/{fileId}").buildAndExpand(featureName, fd.getId()).toUri())
                 .body(fd);
     }
 
@@ -62,6 +62,11 @@ public class FileResource {
     @RequestMapping(value = "/{fileId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void deleteFile(@PathVariable String featureName, @PathVariable Integer fileId) {
         fileService.delete(featureName, fileId);
+    }
+
+    @RequestMapping(value = "/{fileId}/approve", method = RequestMethod.PUT)
+    public void approveFile(@PathVariable String featureName, @PathVariable Integer fileId) {
+        fileService.approve(featureName, fileId);
     }
 
     @RequestMapping(value = "/{fileId}/content", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)

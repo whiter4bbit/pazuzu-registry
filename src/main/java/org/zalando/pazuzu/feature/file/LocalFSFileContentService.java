@@ -27,7 +27,7 @@ import java.nio.file.StandardOpenOption;
  * Latter simplifies deployment and is likely sufficient for all usecases (no big blobs, little number of records)
  */
 @Service
-@Profile({"prod", "dev"})
+@Profile({"production", "dev"})
 public class LocalFSFileContentService implements FileContentService {
 
     private final Path storageRoot;

@@ -86,4 +86,13 @@ public class FileService {
     public List<File> findByNamePart(String featureName, String nameFragment) {
         return fileRepository.findByFeatureNameAndNameIgnoreCaseContaining(featureName, nameFragment);
     }
+
+    public void approve(String featureName, int fileId) {
+        File file = fileRepository.findOneByFeatureNameAndId(featureName, fileId);
+        if (file == null) {
+            throw new PlainNotFoundException(String.format("Not file with %d.", fileId));
+        }
+        file.setApproved(true);
+        fileRepository.save(file);
+    }
 }
